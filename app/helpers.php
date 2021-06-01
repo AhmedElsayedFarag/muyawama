@@ -31,8 +31,27 @@ function getUserProfileServices($services,$lang){
     $user_services_ids = $services->pluck('service_id')->toArray();
     $services = \App\Service::whereIn('id',$user_services_ids)->get();
     $a = [];
+    $b = [];
     foreach ($services as $service){
         $a[\App\Service::find($service->parent_id)->translate($lang)->name][] = new \App\Http\Resources\ServiceResource($service);
     }
-    return $a;
+    foreach ($a as $key=>$value){
+        $b[]=[
+            'parent_name'=>$key,
+            'sub_services'=>$value,
+        ];
+    }
+    return $b;
 }//end getUserProfileServices
+
+function getUserRateWord($number){
+    $rates = [
+        'not reviewed yet',
+        'poor',
+        'fair',
+        'good',
+        'very good',
+        'excellent',
+    ];
+    return $rates[$number];
+}//end getUserRateWord

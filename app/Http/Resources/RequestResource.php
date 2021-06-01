@@ -34,7 +34,7 @@ class RequestResource extends JsonResource
             'service_time' => $this->service_time,
             'language' => $this->language,
             'description' => $this->description,
-            'photos' => unserialize($this->photos),
+            'photos' => (unserialize($this->photos))?unserialize($this->photos):[],
             'city' => $this->city,
             'area' => $this->area,
             'building_number' => $this->building_number,

@@ -36,15 +36,22 @@ Route::prefix('admin')->middleware(['auth','checkAdmin'])->group(function () {
 Route::get('send', 'Admin\FirebaseController@sendMessage');
 
 Route::get('/test', function () {
-    $user = \App\User::find(35);
-    $user_services_ids = $user->services->pluck('service_id')->toArray();
-//    dd($user_services_ids);
-    $services = Service::whereIn('id',$user_services_ids)->get();
-    $a = [];
-    foreach ($services as $service){
-        $a[Service::find($service->parent_id)->translate('en')->name][] = new \App\Http\Resources\ServiceResource($service->translate('en'));
-    }
-    dd($a);
+    $routes = \App\User::Role('provider')->select(DB::raw('count(id) as `data`'), DB::raw("DATE_FORMAT(created_at, '%m-%Y') new_date"),  DB::raw('YEAR(created_at) year, MONTH(created_at) month'))
+        ->groupby('year','month')
+        ->pluck('data')->toArray();
+
+    dd($routes);
+
+
+//    $user = \App\User::find(35);
+//    $user_services_ids = $user->services->pluck('service_id')->toArray();
+////    dd($user_services_ids);
+//    $services = Service::whereIn('id',$user_services_ids)->get();
+//    $a = [];
+//    foreach ($services as $service){
+//        $a[Service::find($service->parent_id)->translate('en')->name][] = new \App\Http\Resources\ServiceResource($service->translate('en'));
+//    }
+//    dd($a);
 
 
 //    $user = new \App\User();

@@ -24,6 +24,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('verify_phone', 'Api\AuthController@verify_phone');
     Route::post('forget_password', 'Api\AuthController@forget_password');
     Route::post('check_phone_code', 'Api\AuthController@check_phone_code');
+    Route::post('resend_code', 'Api\AuthController@resend_code');
 //    Route::get('logout', 'api\AuthController@logout');
 //    Route::post('forget/password', 'api\AuthController@forget_password');
 //    Route::post('resset/password', 'api\AuthController@resset_password');
@@ -36,6 +37,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('auth/new_password', 'Api\AuthController@new_password');
     Route::post('auth/update_device_token', 'Api\AuthController@update_device_token');
     Route::post('auth/getUserDetails', 'Api\UserController@getUserDetails');
+    Route::post('auth/getUserServices', 'Api\UserController@getUserServices');
 
 
     //request apis
@@ -68,3 +70,4 @@ Route::get('services/{parent_id}', 'Api\HomeController@services');
 Route::get('service_options/{parent_id}', 'Api\HomeController@service_options');
 Route::get('global_values', 'Api\HomeController@global_values');
 Route::get('slider', 'Api\HomeController@slider');
+Route::post('contact_us', 'Api\HomeController@contact_us');

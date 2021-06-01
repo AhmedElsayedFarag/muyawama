@@ -124,10 +124,13 @@ class RequestController extends Controller
 
         }//end completed_requests
     public function available_requests(Request $request){
-        $user_services = \Auth::user()->services->pluck('service_id')->toArray();
-        $requests = \App\Request::where('status','pending')->whereIn('service_id',$user_services)->orderby('id','desc')->get();
-        return response(['status' => $this->success, 'data' => RequestResource::collection($requests)]);
-
+        if (\Auth::user()->admin_verified == 1){
+            $user_services = \Auth::user()->services->pluck('service_id')->toArray();
+            $requests = \App\Request::where('status','pending')->whereIn('service_id',$user_services)->orderby('id','desc')->get();
+            return response(['status' => $this->success, 'data' => RequestResource::collection($requests)]);
+        }else{
+            return response(['status' => $this->success, 'data' =>[]]);
+        }
         }//end available_requests
 
     public function get_request_details($id){

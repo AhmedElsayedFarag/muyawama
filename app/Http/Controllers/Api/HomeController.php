@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\ContactUs;
 use App\Http\Controllers\Controller;
 use App\Service;
 use App\ServiceOption;
@@ -22,7 +23,10 @@ class HomeController extends Controller
             'ar' => 'تم ارسال كود التفعيل بنجاح  ',
             'en' => 'phone verification code sent successfully',
         ],
-
+        'message_sent_successfully'=>[
+            'ar' => 'تم ارسال رسالتك  بنجاح  ',
+            'en' => 'Message sent successfully',
+        ],
 
     ];
     public function services($parent_id,Request $request){
@@ -37,9 +41,26 @@ class HomeController extends Controller
         $services = ServiceOption::where('service_id',$parent_id)->get();
         return response(['status' => $this->success, 'data' => $services]);
     }//end service_options
-    public function global_values(){
+    public function global_values(Request $request){
+        $lang = ($request->hasHeader('lang'))?$request->header('lang'):'en';
+        $chat_messages = [
+            'en'=>[
+                'I am busy right now',
+                'Thank you',
+                'you are welcome',
+                'Hello',
+            ],
+            'ar'=>[
+                'انا مشغول الان',
+                'شكرا لك',
+                'على الرحب',
+                'اهلا',
+            ],
+        ];
         return response(['status' => $this->success, 'data' => [
-            'commission'=>1
+            'commission'=>1,
+            'chat_messages'=>$chat_messages[$lang],
+
         ]]);
 
     }//end global_values
@@ -49,5 +70,13 @@ class HomeController extends Controller
         return response(['status' => $this->success, 'data' => $slider]);
 
     }//end slider
+
+
+    public function contact_us(Request $request){
+        $lang = ($request->hasHeader('lang'))?$request->header('lang'):'en';
+        $contact = ContactUs::create($request->all());
+        return response(['status' => $this->success, 'data' => [$this->messages['message_sent_successfully'][$lang]]]);
+
+    }//end contact_us
 
 }

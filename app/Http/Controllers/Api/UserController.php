@@ -69,6 +69,12 @@ class UserController extends Controller
 
     }//end update_profile
 
+    public function getUserServices(Request $request){
+        $lang = ($request->hasHeader('lang'))?$request->header('lang'):'en';
+        $user = \Auth::user();
+        return response(['status' => $this->success, 'data' => [getUserProfileServices($user->services,$lang) ]]);
+    }//getUserServices
+
 
     public function rate_user(Request $request){
         $user = \Auth::user();

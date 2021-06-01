@@ -223,6 +223,13 @@
     <div class="main-menu-content mt-3">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
             <li class=" nav-item {{(\Illuminate\Support\Facades\URL::current() == route('dashboard'))?'active':''}}"><a href="{{route('dashboard')}}"><i class="feather icon-home"></i><span class="menu-title">Home</span></a> </li>
+            <li class=" nav-item"><a href="#"><i class="feather icon-user"></i><span class="menu-title" data-i18n="Ecommerce">Users</span></a>
+                <ul class="menu-content">
+                    <li><a href="app-ecommerce-shop.html"><i class="feather icon-circle"></i><span class="menu-item" data-i18n="Shop">users</span></a></li>
+                    <li><a href="app-ecommerce-details.html"><i class="feather icon-circle"></i><span class="menu-item" data-i18n="Details">providers</span></a></li>
+                    <li><a href="app-ecommerce-wishlist.html"><i class="feather icon-circle"></i><span class="menu-item" data-i18n="Wish List">not activated</span> <span class="badge badge-danger">15</span> </a></li>
+                </ul>
+            </li>
             <li class=" nav-item {{(\Illuminate\Support\Facades\URL::current() == route('admin.services.index'))?'active':''}}"><a href="{{route('admin.services.index')}}"><i class="feather icon-codepen"></i><span class="menu-title">Services</span></a> </li>
             <li class=" nav-item {{(\Illuminate\Support\Facades\URL::current() == route('admin.sliders.index'))?'active':''}}"><a href="{{route('admin.sliders.index')}}"><i class="feather icon-play"></i><span class="menu-title" >Slider</span></a> </li>
         </ul>
@@ -386,8 +393,9 @@
     })
     IntitalizeFireBaseMessaging();
 </script>
+<script src="{{asset('assets/js/scripts.js')}}"></script>
 
-
+@yield('script')
 
 </body>
 <!-- END: Body-->

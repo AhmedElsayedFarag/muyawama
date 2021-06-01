@@ -124,6 +124,11 @@ class AuthController extends Controller
 
         }
     }//end forget_password
+    public function resend_code(Request $request){
+        $lang = ($request->hasHeader('lang'))?$request->header('lang'):'en';
+        $user = User::where('phone',$request->phone)->first();
+        return response(['status' => $this->success, 'data' => [$this->messages['phone_verification_sent_successfully'][$lang]]]);
+    }//end resend_code
     public function check_phone_code(Request $request){
         $lang = ($request->hasHeader('lang'))?$request->header('lang'):'en';
         $user = User::where('phone',$request->phone)->first();
