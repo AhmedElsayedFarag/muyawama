@@ -43,32 +43,48 @@ class AuthController extends Controller
 
     public function login(LoginFormRequest $request)
     {
-        $user = User::where('name', $request->name)->first();
+        $user = User::where('phone', $request->phone)->first();
 
         if ($user && Hash::check($request->password, $user->password)) {
 
             $accessToken = $user->createToken('authToken')->accessToken;
 
-            return response(['status' => $this->success, 'data' => ['token' => $accessToken,'user' => new UserResource($user) ]]);
+            return response(['status' => $this->success, 'data' => [
+                'token' => $accessToken,
+                'user' => new UserResource($user)
+            ]]);
         }
 
         throw ValidationException::withMessages(['password' => 'This value is incorrect']);
     }//end login
 
     public function register(RegisterFormRequest $request){
+        $lang = ($request->hasHeader('lang'))?$request->header('lang'):'en';
         $user = new User();
         $user->name = $request->name;
         $user->phone = $request->phone;
         $user->password = Hash::make($request->password);
+        $user->invitation_code =createRandomCode();
         $user->save();
         //assign role
         $user->assignRole($request->type);
+        //check if has invitation code
+        if ($request->has('invitation_code')){
+            $inviter = User::where('invitation_code',$request->invitation_code)->first();
+            if ($inviter){
+                $inviter->coins += 100;
+                $inviter->save();
+            }
+        }//end if
         //send phone verification code
         $phone_verification = new PhoneVerification();
         $phone_verification->user_id = $user->id;
         $phone_verification->code = 1111;
 //        $phone_verification->code = mt_rand(1000,9999);
         $phone_verification->save();
+        //send notification to admin
+        $admins = User::Role('admin')->pluck('id')->toArray();
+        sendInnerNotification($admins,'new_register',"$user->name has signed up");
         return response(['status' => $this->success, 'data' => [$this->messages['phone_verification_sent_successfully'][($request->hasHeader('lang'))?$request->header('lang'):'en']]]);
     }//end register
 

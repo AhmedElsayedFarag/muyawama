@@ -30,6 +30,7 @@ class CreateUsersTable extends Migration
             $table->string('national_id')->nullable();
             $table->string('image')->nullable();
             $table->string('coins')->default(0);
+            $table->string('device_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

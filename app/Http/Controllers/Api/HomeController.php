@@ -29,6 +29,18 @@ class HomeController extends Controller
         ],
 
     ];
+
+    public function home(Request $request){
+        $lang = ($request->hasHeader('lang'))?$request->header('lang'):'en';
+        App::setLocale($lang);
+        $slider = Slider::OrderBy('id','desc')->get();
+        $services = Service::where('parent_id',0)->with('sub_services')->get();
+        return response(['status' => $this->success, 'data' => [
+            'slider'=>$slider,
+            'services'=>$services,
+        ]]);
+    }//end home
+
     public function services($parent_id,Request $request){
         $lang = ($request->hasHeader('lang'))?$request->header('lang'):'en';
         App::setLocale($lang);
@@ -58,8 +70,18 @@ class HomeController extends Controller
             ],
         ];
         return response(['status' => $this->success, 'data' => [
-            'commission'=>1,
-            'chat_messages'=>$chat_messages[$lang],
+            'commission'=>      setting('commission',$lang),
+            'about_muyawma'=>   setting('about_muyawma',$lang),
+            'privacy_policy'=>  setting('privacy_policy',$lang),
+            'terms_of_use'=>    setting('terms_of_use',$lang),
+            'facebook'=>        setting('facebook',$lang),
+            'twitter'=>         setting('twitter',$lang),
+            'instagram'=>       setting('instagram',$lang),
+            'telegram'=>        setting('telegram',$lang),
+            'tiktok'=>          setting('tiktok',$lang),
+            'm_coins'=>         setting('m_coins',$lang),
+            'cities'=>          \App\Http\Resources\CityResource::collection(\App\City::all()),
+            'chat_messages'=>   $chat_messages[$lang],
 
         ]]);
 

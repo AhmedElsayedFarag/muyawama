@@ -55,3 +55,9 @@ body.dark-layout input.form-control:focus ~ .form-control-position i, body.dark-
     background: #3EB453;
     border-color: #3EB453;
 }
+.primary {
+    color: #3EB453 !important;
+}
+#ecommerce-pagination ul{
+    justify-content: center;
+}

@@ -19,7 +19,6 @@ class AdminController extends Controller
         $pending = \App\Request::where('status','pending')->count();
         $in_progress = \App\Request::where('status','in-progress')->count();
         $completed = \App\Request::where('status','completed')->count();
-
         return view('admin.dashboard',[
             'users_count'    =>     $users_count,
             'providers_count'=>     $providers_count,
@@ -29,4 +28,9 @@ class AdminController extends Controller
             'total_requests' =>     $total_requests,
         ]);
     }//end dashboard
+
+    public function log(){
+        $notifications = \App\Notification::where('user_id',\Auth::id())->orderBy('id','desc')->paginate(15);
+        return view('admin.log',['notifications'=>$notifications]);
+    }
 }

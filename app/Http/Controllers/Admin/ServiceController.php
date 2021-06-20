@@ -51,7 +51,7 @@ class ServiceController extends Controller
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension(); // getting image extension
             $filename =time().mt_rand(1000,9999).'.'.$extension;
-            $file->move('img/services/', $filename);
+            $file->move(public_path('img/services/'), $filename);
             $service->image = 'img/services/'.$filename;
         }//end if
         $service->parent_id = $request->parent_id;
@@ -108,7 +108,7 @@ class ServiceController extends Controller
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension(); // getting image extension
             $filename =time().mt_rand(1000,9999).'.'.$extension;
-            $file->move('img/services/', $filename);
+            $file->move(public_path('img/services/'), $filename);
             $service->image = 'img/services/'.$filename;
         }//end if
         $service->save();

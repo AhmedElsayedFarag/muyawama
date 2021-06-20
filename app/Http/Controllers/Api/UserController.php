@@ -50,7 +50,8 @@ class UserController extends Controller
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension(); // getting image extension
             $filename =time().mt_rand(1000,9999).'.'.$extension;
-            $file->move('img/users/', $filename);
+            $file->move(public_path('img/users/'), $filename);
+
             $data['image'] = 'img/users/'.$filename;
         }//end if
         if ($request->hasFile('national_id')){
@@ -60,7 +61,8 @@ class UserController extends Controller
             $file = $request->file('national_id');
             $extension = $file->getClientOriginalExtension(); // getting image extension
             $filename =time().mt_rand(1000,9999).'.'.$extension;
-            $file->move('img/users/', $filename);
+            $file->move(public_path('img/users/'), $filename);
+
             $data['national_id'] = 'img/users/'.$filename;
         }//end if
         $user->update($data);
@@ -95,5 +97,11 @@ class UserController extends Controller
 
 
     }
+
+    public function getnotifications(Request $request){
+        $notifications = \App\Notification::where('user_id',\Auth::id())->orderBy('id','desc')->get();
+        return response(['status' => $this->success, 'data' => $notifications]);
+
+    }//end getnotifications
 
 }

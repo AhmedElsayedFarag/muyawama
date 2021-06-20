@@ -38,6 +38,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('auth/update_device_token', 'Api\AuthController@update_device_token');
     Route::post('auth/getUserDetails', 'Api\UserController@getUserDetails');
     Route::post('auth/getUserServices', 'Api\UserController@getUserServices');
+    Route::post('auth/notifications', 'Api\UserController@getnotifications');
 
 
     //request apis
@@ -47,13 +48,14 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('in_progress_requests', 'Api\RequestController@in_progress_requests');
     Route::post('completed_requests', 'Api\RequestController@completed_requests');
     Route::post('get_request_details/{id}', 'Api\RequestController@get_request_details');
-    Route::post('provider_complete_service/{id}', 'Api\RequestController@provider_complete_service');
+    Route::post('complete_service/{id}', 'Api\RequestController@complete_service');
     Route::post('get_offer_details/{id}', 'Api\RequestController@get_offer_details');
     Route::post('user_cancel_request/{id}', 'Api\RequestController@user_cancel_request');
     Route::post('add_offer/{id}', 'Api\RequestController@add_offer');
     Route::post('request_offers/{id}', 'Api\RequestController@request_offers');
     Route::post('user_accept_offer/{id}', 'Api\RequestController@user_accept_offer');
     Route::post('my_offers', 'Api\RequestController@my_offers');
+    Route::post('user_cancel_offer/{id}', 'Api\RequestController@user_cancel_offer');
 
 
     //rate_user
@@ -70,4 +72,5 @@ Route::get('services/{parent_id}', 'Api\HomeController@services');
 Route::get('service_options/{parent_id}', 'Api\HomeController@service_options');
 Route::get('global_values', 'Api\HomeController@global_values');
 Route::get('slider', 'Api\HomeController@slider');
+Route::get('home', 'Api\HomeController@home');
 Route::post('contact_us', 'Api\HomeController@contact_us');

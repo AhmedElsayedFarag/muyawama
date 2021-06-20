@@ -28,6 +28,7 @@ class CreateRequestsTable extends Migration
             $table->string('number_of_days_or_hours');
             $table->string('gender');
             $table->string('service_time');
+            $table->string('service_time_date')->nullable();
             $table->string('language');
             $table->text('description');
             $table->text('photos')->nullable();

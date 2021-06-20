@@ -7,6 +7,7 @@ use App\Http\Requests\RequestForm;
 use App\Http\Resources\RequestOfferResource;
 use App\Http\Resources\RequestResource;
 use App\RequestOffer;
+use App\User;
 use App\UserService;
 use Illuminate\Http\Request;
 
@@ -20,8 +21,8 @@ class RequestController extends Controller
             'en' => 'updated successfully',
         ],
         'request_cancelled_successfully'=>[
-            'ar' => 'تم الغاء الطلب بنجاح ',
-            'en' => 'request cancelled successfully',
+            'ar' => 'تم  الالغاء بنجاح ',
+            'en' => 'cancelled successfully',
         ],
         'request_cancelled_failed'=>[
             'ar' => 'الطلب قيد التنفيذ بالفعل',
@@ -51,6 +52,10 @@ class RequestController extends Controller
             'ar' => 'تم تسليم الخدمة بنجاح',
             'en' => 'service delivered successfully',
         ],
+        'offer_refused'=>[
+            'ar' => 'تم رفض العرض الخاص بك  ',
+            'en' => 'your offer has been refused',
+        ],
 
 
     ];
@@ -66,7 +71,8 @@ class RequestController extends Controller
                 $file = $request->file('photos')[$x];
                 $extension = $file->getClientOriginalExtension(); // getting image extension
                 $filename =time().mt_rand(1000,9999).'.'.$extension;
-                $file->move('img/services/', $filename);
+                $file->move(public_path('img/services/'), $filename);
+
                 $photos[] = 'img/services/'.$filename;
             }//end for
             $data['photos'] = serialize($photos);
@@ -77,6 +83,11 @@ class RequestController extends Controller
         $services_of_users = UserService::where('service_id',$req->service_id)->pluck('user_id')->toArray();
         $re_providers = \App\User::whereNotNull('device_token')->whereIn('id',$services_of_users)->pluck('device_token')->all();
         $result = sendNotification($re_providers,$this->messages['new_request_notification'][$lang],$this->messages['new_request_notification'][$lang]);
+        //send inner notification to admin and providers
+        $admins = User::Role('admin')->pluck('id')->toArray();
+        sendInnerNotification($admins,'new_order',\Auth::user()->name." has made a new request");
+        $providers = \App\User::whereIn('id',$services_of_users)->pluck('id')->toArray();
+        sendInnerNotification($providers,'new_order','There is a new request is waiting for you');
         return response(['status' => $this->success, 'data' => [$this->messages['added_successfully'][$lang]]]);
 
     }//end make_request
@@ -133,18 +144,54 @@ class RequestController extends Controller
         }
         }//end available_requests
 
+    public function user_cancel_offer(Request $request,$id){
+        $lang = ($request->hasHeader('lang'))?$request->header('lang'):'en';
+        $offer = RequestOffer::findOrFail($id);
+        $req = \App\Request::findOrFail($offer->request_id);
+        $offer->delete();
+        //send notification
+        $re_providers = \App\User::where('id',$offer->user_id)->pluck('device_token')->all();
+        $result = sendNotification($re_providers,$this->messages['offer_refused'][$lang],$this->messages['offer_refused'][$lang]);
+        //send inner notification to admin and providers
+        $admins = User::Role('admin')->pluck('id')->toArray();
+        sendInnerNotification($admins,'cancel_offer',\Auth::user()->name." has cancelled an offer for his request");
+        $re_providers = \App\User::where('id',$offer->user_id)->pluck('id')->toArray();
+        sendInnerNotification($re_providers,'cancel_offer','your offer has been cancelled');
+        return response(['status' => $this->success, 'data' => [$this->messages['request_cancelled_successfully'][$lang]]]);
+    }//end user_cancel_offer
+
     public function get_request_details($id){
         $req = \App\Request::findOrFail($id);
         return response(['status' => $this->success, 'data' => new RequestResource($req)]);
     }//end get_request_details
-    public function provider_complete_service($id,Request $request){
+    public function complete_service($id,Request $request){
         $lang = ($request->hasHeader('lang'))?$request->header('lang'):'en';
         $req = \App\Request::findOrFail($id);
         $req->status = 'completed';
         $req->save();
-        //send notification
-        $re_providers = \App\User::whereNotNull('device_token')->where('id',$req->user_id)->pluck('device_token')->all();
-        $result = sendNotification($re_providers,$this->messages['provider_complete_service'][$lang],$this->messages['provider_complete_service'][$lang]);
+
+        if (\Auth::user()->hasRole('user')){
+            //send notification to provider
+            $re_providers = \App\User::whereNotNull('device_token')->where('id',$req->provider_id)->pluck('device_token')->all();
+            $result = sendNotification($re_providers,$this->messages['provider_complete_service'][$lang],$this->messages['provider_complete_service'][$lang]);
+
+            //send inner notification to admin and providers
+            $admins = User::Role('admin')->pluck('id')->toArray();
+            sendInnerNotification($admins,'complete_order',\Auth::user()->name." has completed  his request");
+            $re_providers = \App\User::where('id',$req->provider_id)->pluck('id')->toArray();
+            sendInnerNotification($re_providers,'complete_order','the order is completed');
+
+        }elseif (\Auth::user()->hasRole('provider')){
+            //send notification to user
+            $re_providers = \App\User::whereNotNull('device_token')->where('id',$req->user_id)->pluck('device_token')->all();
+            $result = sendNotification($re_providers,$this->messages['provider_complete_service'][$lang],$this->messages['provider_complete_service'][$lang]);
+            //send inner notification to admin and providers
+            $admins = User::Role('admin')->pluck('id')->toArray();
+            sendInnerNotification($admins,'complete_order',\Auth::user()->name." has completed  the request");
+            $re_providers = \App\User::where('id',$req->user_id)->pluck('id')->toArray();
+            sendInnerNotification($re_providers,'complete_order','the order is completed');
+
+        }
         return response(['status' => $this->success, 'data' => [$this->messages['provider_complete_service'][$lang]]]);
     }//end provider_complete_service
     public function get_offer_details($id){
@@ -174,6 +221,11 @@ class RequestController extends Controller
             //send notification
             $re_providers = \App\User::where('id',$req->user_id)->pluck('device_token')->all();
             $result = sendNotification($re_providers,$this->messages['new_offer_notification'][$lang],$this->messages['new_offer_notification'][$lang]);
+            //send inner notification to admin and providers
+            $admins = User::Role('admin')->pluck('id')->toArray();
+            sendInnerNotification($admins,'new_offer',\Auth::user()->name." has made a new offer");
+            $re_providers = \App\User::where('id',$req->user_id)->pluck('id')->toArray();
+            sendInnerNotification($re_providers,'new_offer','There is a new offer for your request');
 
             return response(['status' => $this->success, 'data' => [$this->messages['added_successfully'][$lang]]]);
         }else{
@@ -204,8 +256,12 @@ class RequestController extends Controller
             $re_providers = \App\User::where('id',$req->provider_id)->pluck('device_token')->all();
             $result = sendNotification($re_providers,$this->messages['offer_accepted_successfully'][$lang],$this->messages['offer_accepted_successfully'][$lang]);
 
+            //send inner notification to admin and providers
+            $admins = User::Role('admin')->pluck('id')->toArray();
+            sendInnerNotification($admins,'accept_offer',\Auth::user()->name." has accepted an offer");
+            $re_providers = \App\User::where('id',$req->provider_id)->pluck('id')->toArray();
+            sendInnerNotification($re_providers,'accept_offer','your offer has been accepted');
 
-//        $other_offers->delete();
             return response(['status' => $this->success, 'data' => [$this->messages['offer_accepted_successfully'][$lang]]]);
         }else{
             return response(['status' => $this->error, 'errors' => [$this->messages['request_cancelled_failed'][$lang]]],$this->error);

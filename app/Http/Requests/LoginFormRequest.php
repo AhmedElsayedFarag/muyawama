@@ -27,7 +27,7 @@ class LoginFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|exists:users,name',
+            'phone' => 'required|exists:users,phone',
             'password' => 'required',
         ];
     }
@@ -57,7 +57,7 @@ class LoginFormRequest extends FormRequest
         }//end foreach
         $response = [
             'status' => 422,
-            'errors' => $errors
+            'errors' => $errors,
         ];
         throw new HttpResponseException(response()->json($response, 422));
     }

@@ -9,7 +9,7 @@
     <meta name="description" content="Vuexy admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
     <meta name="keywords" content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="PIXINVENT">
-    <title>Dashboard analytics - Vuexy - Bootstrap HTML admin template</title>
+    <title>{{setting('website_title','en')}}</title>
     <link rel="apple-touch-icon" href="../../../app-assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="../../../app-assets/images/ico/favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600" rel="stylesheet">
@@ -56,7 +56,9 @@
         <div class="navbar-container content">
             <div class="navbar-collapse" id="navbar-mobile">
                 <div class="mr-auto float-left bookmark-wrapper d-flex align-items-center">
-
+                    <ul class="nav navbar-nav">
+                        <li class="nav-item mobile-menu d-xl-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ficon feather icon-menu"></i></a></li>
+                    </ul>
                 </div>
                 <ul class="nav navbar-nav float-right">
 {{--                    <li class="dropdown dropdown-language nav-item"><a class="dropdown-toggle nav-link" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="flag-icon flag-icon-us"></i><span class="selected-language">English</span></a>--}}
@@ -64,62 +66,18 @@
 {{--                    </li>--}}
                     <li class="nav-item d-none d-lg-block"><a class="nav-link nav-link-expand"><i class="ficon feather icon-maximize"></i></a></li>
 
-                    <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label" href="#" data-toggle="dropdown"><i class="ficon feather icon-bell"></i><span class="badge badge-pill badge-primary badge-up">5</span></a>
-                        <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
-                            <li class="dropdown-menu-header">
-                                <div class="dropdown-header m-0 p-2">
-                                    <h3 class="white">5 New</h3><span class="notification-title">App Notifications</span>
-                                </div>
-                            </li>
-                            <li class="scrollable-container media-list"><a class="d-flex justify-content-between" href="javascript:void(0)">
-                                    <div class="media d-flex align-items-start">
-                                        <div class="media-left"><i class="feather icon-plus-square font-medium-5 primary"></i></div>
-                                        <div class="media-body">
-                                            <h6 class="primary media-heading">You have new order!</h6><small class="notification-text"> Are your going to meet me tonight?</small>
-                                        </div><small>
-                                            <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">9 hours ago</time></small>
-                                    </div>
-                                </a><a class="d-flex justify-content-between" href="javascript:void(0)">
-                                    <div class="media d-flex align-items-start">
-                                        <div class="media-left"><i class="feather icon-download-cloud font-medium-5 success"></i></div>
-                                        <div class="media-body">
-                                            <h6 class="success media-heading red darken-1">99% Server load</h6><small class="notification-text">You got new order of goods.</small>
-                                        </div><small>
-                                            <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">5 hour ago</time></small>
-                                    </div>
-                                </a><a class="d-flex justify-content-between" href="javascript:void(0)">
-                                    <div class="media d-flex align-items-start">
-                                        <div class="media-left"><i class="feather icon-alert-triangle font-medium-5 danger"></i></div>
-                                        <div class="media-body">
-                                            <h6 class="danger media-heading yellow darken-3">Warning notifixation</h6><small class="notification-text">Server have 99% CPU usage.</small>
-                                        </div><small>
-                                            <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">Today</time></small>
-                                    </div>
-                                </a><a class="d-flex justify-content-between" href="javascript:void(0)">
-                                    <div class="media d-flex align-items-start">
-                                        <div class="media-left"><i class="feather icon-check-circle font-medium-5 info"></i></div>
-                                        <div class="media-body">
-                                            <h6 class="info media-heading">Complete the task</h6><small class="notification-text">Cake sesame snaps cupcake</small>
-                                        </div><small>
-                                            <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">Last week</time></small>
-                                    </div>
-                                </a><a class="d-flex justify-content-between" href="javascript:void(0)">
-                                    <div class="media d-flex align-items-start">
-                                        <div class="media-left"><i class="feather icon-file font-medium-5 warning"></i></div>
-                                        <div class="media-body">
-                                            <h6 class="warning media-heading">Generate monthly report</h6><small class="notification-text">Chocolate cake oat cake tiramisu marzipan</small>
-                                        </div><small>
-                                            <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">Last month</time></small>
-                                    </div>
-                                </a></li>
-                            <li class="dropdown-menu-footer"><a class="dropdown-item p-1 text-center" href="javascript:void(0)">Read all notifications</a></li>
-                        </ul>
-                    </li>
+
                     <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
-                            <div class="user-nav d-sm-flex d-none"><span class="user-name text-bold-600">John Doe</span><span class="user-status">Available</span></div><span><img class="round" src="../../../app-assets/images/portrait/small/avatar-s-11.jpg" alt="avatar" height="40" width="40"></span>
+                            <div class="user-nav d-sm-flex d-none"><span class="user-name text-bold-600">{{\Auth::user()->name}}</span><span class="user-status">Available</span></div><span><img class="round" src="{{asset(\Auth::user()->image)}}" alt="{{\Auth::user()->name}}" height="40" width="40"></span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="page-user-profile.html"><i class="feather icon-user"></i> Edit Profile</a><a class="dropdown-item" href="app-email.html"><i class="feather icon-mail"></i> My Inbox</a><a class="dropdown-item" href="app-todo.html"><i class="feather icon-check-square"></i> Task</a><a class="dropdown-item" href="app-chat.html"><i class="feather icon-message-square"></i> Chats</a>
-                            <div class="dropdown-divider"></div><a class="dropdown-item" href="auth-login.html"><i class="feather icon-power"></i> Logout</a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="{{route('admin.users.edit',\Auth::id())}}"><i class="feather icon-user"></i> Edit Profile</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();"><i class="feather icon-power"></i> Logout</a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
                         </div>
                     </li>
                 </ul>
@@ -223,15 +181,28 @@
     <div class="main-menu-content mt-3">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
             <li class=" nav-item {{(\Illuminate\Support\Facades\URL::current() == route('dashboard'))?'active':''}}"><a href="{{route('dashboard')}}"><i class="feather icon-home"></i><span class="menu-title">Home</span></a> </li>
-            <li class=" nav-item"><a href="#"><i class="feather icon-user"></i><span class="menu-title" data-i18n="Ecommerce">Users</span></a>
+            <li class=" nav-item {{(\Illuminate\Support\Facades\URL::current() == route('log'))?'active':''}}"><a href="{{route('log')}}"><i class="feather icon-activity"></i><span class="menu-title">Activity Timeline</span></a> </li>
+            <li class=" nav-item"><a href="#"><i class="feather icon-user"></i><span class="menu-title">Users</span></a>
                 <ul class="menu-content">
-                    <li><a href="app-ecommerce-shop.html"><i class="feather icon-circle"></i><span class="menu-item" data-i18n="Shop">users</span></a></li>
-                    <li><a href="app-ecommerce-details.html"><i class="feather icon-circle"></i><span class="menu-item" data-i18n="Details">providers</span></a></li>
-                    <li><a href="app-ecommerce-wishlist.html"><i class="feather icon-circle"></i><span class="menu-item" data-i18n="Wish List">not activated</span> <span class="badge badge-danger">15</span> </a></li>
+                    <li><a href="{{route('admin.users.index',['type'=>'user'])}}"><i class="feather icon-circle"></i><span class="menu-item" data-i18n="Shop">users</span> <span class="badge badge-success">{{$count_all_users}}</span> </a></li>
+                    <li><a href="{{route('admin.users.index',['type'=>'provider'])}}"><i class="feather icon-circle"></i><span class="menu-item" data-i18n="Details">providers</span> <span class="badge badge-info">{{$count_all_providers}}</span> </a></li>
+                    <li><a href="{{route('admin.users.index',['type'=>'not_activated'])}}"><i class="feather icon-circle"></i><span class="menu-item" data-i18n="Wish List">not activated</span> <span class="badge badge-warning">{{$count_all_not_activated}}</span> </a></li>
+                </ul>
+            </li>
+            <li class=" nav-item"><a href="#"><i class="feather icon-shopping-cart"></i><span class="menu-title">Orders</span></a>
+                <ul class="menu-content">
+                    <li><a href="{{route('admin.orders.index',['type'=>'pending'])}}"><i class="feather icon-circle"></i><span class="menu-item" data-i18n="Shop">Pending</span> <span class="badge badge-success">{{$count_pending_orders}}</span> </a></li>
+                    <li><a href="{{route('admin.orders.index',['type'=>'in-progress'])}}"><i class="feather icon-circle"></i><span class="menu-item" data-i18n="Details">In progress</span> <span class="badge badge-info">{{$count_in_progress_orders}}</span> </a></li>
+                    <li><a href="{{route('admin.orders.index',['type'=>'completed'])}}"><i class="feather icon-circle"></i><span class="menu-item" data-i18n="Wish List">Completed</span> <span class="badge badge-warning">{{$count_completed_orders}}</span> </a></li>
+                    <li><a href="{{route('admin.orders.index',['type'=>'cancelled'])}}"><i class="feather icon-circle"></i><span class="menu-item" data-i18n="Wish List">Cancelled</span> <span class="badge badge-warning">{{$count_cancelled_orders}}</span> </a></li>
                 </ul>
             </li>
             <li class=" nav-item {{(\Illuminate\Support\Facades\URL::current() == route('admin.services.index'))?'active':''}}"><a href="{{route('admin.services.index')}}"><i class="feather icon-codepen"></i><span class="menu-title">Services</span></a> </li>
             <li class=" nav-item {{(\Illuminate\Support\Facades\URL::current() == route('admin.sliders.index'))?'active':''}}"><a href="{{route('admin.sliders.index')}}"><i class="feather icon-play"></i><span class="menu-title" >Slider</span></a> </li>
+            <li class=" nav-item {{(\Illuminate\Support\Facades\URL::current() == route('admin.cities.index'))?'active':''}}"><a href="{{route('admin.cities.index')}}"><i class="feather icon-globe"></i><span class="menu-title" >Cities</span></a> </li>
+            <li class=" nav-item {{(\Illuminate\Support\Facades\URL::current() == route('admin.contacts.index'))?'active':''}}"><a href="{{route('admin.contacts.index')}}"><i class="feather icon-mail"></i><span class="menu-title" >Contact Us</span></a> </li>
+            <li class=" nav-item {{(\Illuminate\Support\Facades\URL::current() == route('admin.settings.index'))?'active':''}}"><a href="{{route('admin.settings.index')}}"><i class="feather icon-settings"></i><span class="menu-title" >Settings</span></a> </li>
+
         </ul>
     </div>
 </div>

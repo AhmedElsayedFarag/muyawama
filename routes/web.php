@@ -25,22 +25,31 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::prefix('admin')->middleware(['auth','checkAdmin'])->group(function () {
     Route::get('dashboard', 'Admin\AdminController@dashboard')->name('dashboard');
+    Route::get('time-line', 'Admin\AdminController@log')->name('log');
 
 
 
     Route::resource('services', \Admin\ServiceController::class,['as'=>'admin']);
     Route::resource('service_options', \Admin\ServiceOptionController::class,['as'=>'admin']);
     Route::resource('sliders', \Admin\SliderController::class,['as'=>'admin']);
+    Route::resource('users', \Admin\UserController::class,['as'=>'admin']);
+    Route::resource('orders', \Admin\OrderController::class,['as'=>'admin']);
+    Route::resource('settings', \Admin\SettingController::class,['as'=>'admin']);
+    Route::resource('cities', \Admin\CityController::class,['as'=>'admin']);
+    Route::resource('areas', \Admin\AreaController::class,['as'=>'admin']);
+    Route::resource('contacts', \Admin\ContactController::class,['as'=>'admin']);
+    Route::get('users/activate/{user_id}', 'Admin\UserController@activate_user')->name('admin.users.activate');
 
 });
 Route::get('send', 'Admin\FirebaseController@sendMessage');
 
 Route::get('/test', function () {
-    $routes = \App\User::Role('provider')->select(DB::raw('count(id) as `data`'), DB::raw("DATE_FORMAT(created_at, '%m-%Y') new_date"),  DB::raw('YEAR(created_at) year, MONTH(created_at) month'))
-        ->groupby('year','month')
-        ->pluck('data')->toArray();
 
-    dd($routes);
+//    $routes = \App\User::Role('provider')->select(DB::raw('count(id) as `data`'), DB::raw("DATE_FORMAT(created_at, '%m-%Y') new_date"),  DB::raw('YEAR(created_at) year, MONTH(created_at) month'))
+//        ->groupby('year','month')
+//        ->pluck('data')->toArray();
+//
+//    dd($routes);
 
 
 //    $user = \App\User::find(35);

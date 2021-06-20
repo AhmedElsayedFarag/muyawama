@@ -34,6 +34,9 @@ class UserResource extends JsonResource
             'rates' => ($this->rates()->avg('rate'))?ceil($this->rates()->avg('rate')):'0',
             'rate_word' => ($this->rates()->avg('rate'))? getUserRateWord(ceil($this->rates()->avg('rate'))):getUserRateWord(0),
             'device_token' => $this->device_token,
+            'unread_notifications_count' => \App\Notification::where([
+                ['user_id',$this->id],['read',0]
+            ])->count(),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
